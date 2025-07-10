@@ -1,194 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Assistant</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            margin-bottom: 12px;
-            border-radius: 18px;
-            word-wrap: break-word;
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        .user {
-            background-color: #3b82f6;
-            color: white;
-            margin-left: auto;
-            border-bottom-right-radius: 4px;
-        }
-        
-        .bot {
-            background-color: #10b981;
-            color: white;
-            margin-right: auto;
-            border-bottom-left-radius: 4px;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        #chat {
-            scrollbar-width: thin;
-            scrollbar-color: #e5e7eb #f3f4f6;
-        }
-        
-        #chat::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        #chat::-webkit-scrollbar-track {
-            background: #f3f4f6;
-            border-radius: 10px;
-        }
-        
-        #chat::-webkit-scrollbar-thumb {
-            background-color: #e5e7eb;
-            border-radius: 10px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style> /* your existing styles */ </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-    <header class="bg-white shadow-sm py-6">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center justify-center">
-                <i class="fas fa-robot text-3xl text-blue-500 mr-3"></i>
-                <h1 class="text-3xl font-bold text-gray-800">AI Assistant</h1>
-            </div>
-        </div>
-    </header>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+  <div id="chat" class="flex-grow p-6 overflow-y-auto"></div>
+  <div class="p-4 bg-white border-t flex">
+    <input id="userInput" class="flex-grow px-4 py-2 border rounded" placeholder="Type your message..." />
+    <button id="sendBtn" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Send</button>
+  </div>
 
-    <main class="flex-grow container mx-auto px-4 py-8 flex flex-col">
-        <div class="bg-white rounded-xl shadow-md overflow-hidden flex-grow flex flex-col max-w-3xl w-full mx-auto">
-            <!-- Chat container -->
-            <div id="chat" class="flex-grow p-6 overflow-y-auto">
-                <div class="message bot">
-                    Bot: Hello! I'm your AI assistant. How can I help you today?
-                </div>
-            </div>
-            
-            <!-- Input area -->
-            <div class="border-t border-gray-200 p-4 bg-gray-50">
-                <div class="flex items-center">
-                    <input 
-                        id="userInput" 
-                        type="text" 
-                        placeholder="Type your message here..." 
-                        class="flex-grow px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        onkeypress="if(event.keyCode === 13) handleSend()"
-                    >
-                    <button 
-                        id="sendButton"
-                        onclick="handleSend()" 
-                        class="ml-3 bg-blue-500 hover:bg-blue-600 text-white px-5 py-3 rounded-lg transition duration-200 flex items-center justify-center"
-                    >
-                        <i class="fas fa-paper-plane mr-2"></i>
-                        <span>Send</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </main>
+  <script>
+    let stage = 0;               // 0 = ask name, 1 = ask email, 2 = normal chat
+    let collected = { name: null, email: null };
 
-    <footer class="bg-white py-4 border-t border-gray-200">
-        <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
-            © 2023 AI Assistant. All rights reserved.
-        </div>
-    </footer>
-
-    <script>
-        function addMessage(text, sender) {
-            const chat = document.getElementById("chat");
-            const div = document.createElement("div");
-            div.className = "message " + sender;
-            
-            // Create a more polished message format
-            const prefix = document.createElement("span");
-            prefix.className = "font-semibold";
-            prefix.textContent = sender === "user" ? "You: " : "Bot: ";
-            
-            const content = document.createElement("span");
-            content.textContent = text;
-            
-            div.appendChild(prefix);
-            div.appendChild(content);
-            
-            // Add timestamp
-            const time = document.createElement("div");
-            time.className = "text-xs opacity-70 mt-1 text-right";
-            time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            div.appendChild(time);
-            
-            chat.appendChild(div);
-            chat.scrollTop = chat.scrollHeight;
-        }
-
-        function displayBotReply(text) {
-            addMessage(text, "bot");
-        }
-
-        function handleSend() {
-            const input = document.getElementById("userInput");
-            const message = input.value.trim();
-            if (!message) return;
-
-            addMessage(message, "user");
-            input.value = "";
-            
-            // Disable button during request
-            const sendButton = document.getElementById("sendButton");
-            sendButton.disabled = true;
-            sendButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i><span>Sending...</span>';
-            
-            sendMessageToN8N(message);
-        }
-
-function sendMessageToN8N(userMessage) {
-  const name = customerInfo?.name || "Anonymous";
-  const email = customerInfo?.email || "unknown@example.com";
-
-  fetch("https://hivematic.app.n8n.cloud/webhook-test/66dcc32f-bd72-4183-b6ea-903bd0f590ca", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name,
-      email,
-      message: userMessage
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    displayBotReply(data.reply || "Thanks for your message.");
-  })
-  .catch(err => {
-    console.error("Error:", err);
-    displayBotReply("Sorry, something went wrong.");
-  });
-}
-
-<script>
-let customerInfo = null;
-
-window.addEventListener("message", (event) => {
-  // Only allow messages from your own Shopify store
-  if (event.origin.includes("your-shopify-store.myshopify.com")) {
-    if (event.data?.type === "shopify_customer") {
-      customerInfo = event.data.payload;
-      console.log("✅ Customer info received:", customerInfo);
+    function addMessage(text, sender="bot") {
+      const div = document.createElement("div");
+      div.className = `message ${sender}`;
+      div.innerHTML = `<strong>${sender==="user"?"You":"Bot"}:</strong> ${text}`;
+      document.getElementById("chat").appendChild(div);
+      window.scrollTo(0, document.body.scrollHeight);
     }
-  }
-});
-</script>
 
+    // initialization
+    addMessage("Hello! I'm your AI assistant. What's your name?");
 
+    document.getElementById("sendBtn").onclick = handleSend;
+    document.getElementById("userInput").addEventListener("keypress", e => {
+      if (e.key==="Enter") handleSend();
+    });
 
-    </script>
+    function handleSend() {
+      const input = document.getElementById("userInput");
+      const msg = input.value.trim();
+      if (!msg) return;
+      addMessage(msg, "user");
+      input.value = "";
+      
+      if (stage === 0) {
+        collected.name = msg;
+        stage = 1;
+        addMessage(`Nice to meet you, ${collected.name}! And your email?`);
+      }
+      else if (stage === 1) {
+        collected.email = msg;
+        stage = 2;
+        addMessage("Thanks! How can I help you today?");
+      }
+      else {
+        // normal chat: send to N8N
+        sendToN8N(msg);
+      }
+    }
+
+    function sendToN8N(userMessage) {
+      fetch("https://hivematic.app.n8n.cloud/webhook/66dcc32f-bd72-4183-b6ea-903bd0f590ca", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: collected.name,
+          email: collected.email,
+          message: userMessage
+        })
+      })
+      .then(res => res.json())
+      .then(data => addMessage(data.reply || "Sorry, no reply."))
+      .catch(err => {
+        console.error(err);
+        addMessage("Oops—something went wrong.");
+      });
+    }
+  </script>
 </body>
 </html>
