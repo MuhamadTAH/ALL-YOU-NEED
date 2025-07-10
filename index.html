@@ -1,65 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Shopify Chatbot</title>
-  <style>
-    body { font-family: sans-serif; background: #f5f5f5; padding: 20px; }
-    #chat { height: 400px; overflow-y: auto; background: white; padding: 10px; border: 1px solid #ccc; }
-    .message { margin: 10px 0; }
-    .user { color: blue; }
-    .bot { color: green; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .user {
+            background-color: #3b82f6;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .bot {
+            background-color: #10b981;
+            color: white;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        #chat {
+            scrollbar-width: thin;
+            scrollbar-color: #e5e7eb #f3f4f6;
+        }
+        
+        #chat::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        #chat::-webkit-scrollbar-track {
+            background: #f3f4f6;
+            border-radius: 10px;
+        }
+        
+        #chat::-webkit-scrollbar-thumb {
+            background-color: #e5e7eb;
+            border-radius: 10px;
+        }
+    </style>
 </head>
-<body>
-  <h2>Ask the Assistant</h2>
-  <div id="chat"></div>
-  <input type="text" id="userInput" placeholder="Type your question..." />
-  <button onclick="handleSend()">Send</button>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <header class="bg-white shadow-sm py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-center">
+                <i class="fas fa-robot text-3xl text-blue-500 mr-3"></i>
+                <h1 class="text-3xl font-bold text-gray-800">AI Assistant</h1>
+            </div>
+        </div>
+    </header>
 
-  <script>
-    function addMessage(text, sender) {
-      const chat = document.getElementById("chat");
-      const div = document.createElement("div");
-      div.className = "message " + sender;
-      div.innerText = (sender === "user" ? "You: " : "Bot: ") + text;
-      chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
-    }
+    <main class="flex-grow container mx-auto px-4 py-8 flex flex-col">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden flex-grow flex flex-col max-w-3xl w-full mx-auto">
+            <!-- Chat container -->
+            <div id="chat" class="flex-grow p-6 overflow-y-auto">
+                <div class="message bot">
+                    Bot: Hello! I'm your AI assistant. How can I help you today?
+                </div>
+            </div>
+            
+            <!-- Input area -->
+            <div class="border-t border-gray-200 p-4 bg-gray-50">
+                <div class="flex items-center">
+                    <input 
+                        id="userInput" 
+                        type="text" 
+                        placeholder="Type your message here..." 
+                        class="flex-grow px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        onkeypress="if(event.keyCode === 13) handleSend()"
+                    >
+                    <button 
+                        id="sendButton"
+                        onclick="handleSend()" 
+                        class="ml-3 bg-blue-500 hover:bg-blue-600 text-white px-5 py-3 rounded-lg transition duration-200 flex items-center justify-center"
+                    >
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        <span>Send</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
 
-    function displayBotReply(text) {
-      addMessage(text, "bot");
-    }
+    <footer class="bg-white py-4 border-t border-gray-200">
+        <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
+            © 2023 AI Assistant. All rights reserved.
+        </div>
+    </footer>
 
-    function handleSend() {
-      const input = document.getElementById("userInput");
-      const message = input.value;
-      if (!message) return;
+    <script>
+        function addMessage(text, sender) {
+            const chat = document.getElementById("chat");
+            const div = document.createElement("div");
+            div.className = "message " + sender;
+            
+            // Create a more polished message format
+            const prefix = document.createElement("span");
+            prefix.className = "font-semibold";
+            prefix.textContent = sender === "user" ? "You: " : "Bot: ";
+            
+            const content = document.createElement("span");
+            content.textContent = text;
+            
+            div.appendChild(prefix);
+            div.appendChild(content);
+            
+            // Add timestamp
+            const time = document.createElement("div");
+            time.className = "text-xs opacity-70 mt-1 text-right";
+            time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            div.appendChild(time);
+            
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
 
-      addMessage(message, "user");
-      input.value = "";
-      sendMessageToN8N(message);
-    }
+        function displayBotReply(text) {
+            addMessage(text, "bot");
+        }
 
-    function sendMessageToN8N(userMessage) {
-      fetch("https://hivematic.app.n8n.cloud/webhook/66dcc32f-bd72-4183-b6ea-903bd0f590ca", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: "John", // Later you can replace this with dynamic name
-          email: "john@example.com",
-          message: userMessage
-        })
-      })
-      .then(res => res.json())
-      .then(data => {
-        displayBotReply(data.reply); // Show reply from N8N
-      })
-      .catch(err => {
-        console.error("Error:", err);
-        displayBotReply("Sorry, something went wrong.");
-      });
-    }
-  </script>
+        function handleSend() {
+            const input = document.getElementById("userInput");
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage(message, "user");
+            input.value = "";
+            
+            // Disable button during request
+            const sendButton = document.getElementById("sendButton");
+            sendButton.disabled = true;
+            sendButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i><span>Sending...</span>';
+            
+            sendMessageToN8N(message);
+        }
+
+        function sendMessageToN8N(userMessage) {
+            fetch("https://hivematic.app.n8n.cloud/webhook/66dcc32f-bd72-4183-b6ea-903bd0f590ca", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: "John",
+                    email: "john@example.com",
+                    message: userMessage
+                })
+            })
+            .then(async res => {
+                if (!res.ok) {
+                    throw new Error("Bad response");
+                }
+                const data = await res.json();
+                if (!data.reply) {
+                    throw new Error("Missing reply");
+                }
+                displayBotReply(data.reply);
+            })
+            .catch(err => {
+                console.error("Error:", err);
+                displayBotReply("Sorry, something went wrong. Please try again later.");
+            })
+            .finally(() => {
+                // Re-enable button
+                const sendButton = document.getElementById("sendButton");
+                sendButton.disabled = false;
+                sendButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i><span>Send</span>';
+            });
+        }
+    </script>
 </body>
 </html>
