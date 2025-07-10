@@ -112,6 +112,12 @@ function handleSend() {
     sendToN8N(msg);
   }
 }
+    let uid = localStorage.getItem("chat_uid");
+if (!uid) {
+  uid = crypto.randomUUID();
+  localStorage.setItem("chat_uid", uid);
+}
+
 
   </script>
 </body>
