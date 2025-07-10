@@ -1,370 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyInstagramApp | Instagram Insights Tool</title>
-    <meta name="description" content="Connect your Instagram Business account to access insights and media using the Instagram Graph API.">
-    <meta name="keywords" content="Instagram insights, Instagram analytics, Instagram Business tools">
-    <meta property="og:title" content="MyInstagramApp">
-    <meta property="og:description" content="Instagram Insights Tool for Business Accounts">
-    <meta property="og:type" content="website">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .active-nav-item {
-            border-bottom: 2px solid #6366f1;
-        }
-        .smooth-scroll {
-            scroll-behavior: smooth;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Shopify Chatbot</title>
+  <style>
+    body { font-family: sans-serif; background: #f5f5f5; padding: 20px; }
+    #chat { height: 400px; overflow-y: auto; background: white; padding: 10px; border: 1px solid #ccc; }
+    .message { margin: 10px 0; }
+    .user { color: blue; }
+    .bot { color: green; }
+  </style>
 </head>
-<body class="smooth-scroll bg-gray-50 font-sans">
-    <!-- Navigation -->
-    <nav class="fixed w-full bg-white shadow-sm z-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <span class="text-xl font-bold text-indigo-600">MyInstagramApp</span>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#home" class="text-gray-700 hover:text-indigo-600 transition active-nav-item">Home</a>
-                    <a href="#privacy" class="text-gray-700 hover:text-indigo-600 transition">Privacy Policy</a>
-                    <a href="#terms" class="text-gray-700 hover:text-indigo-600 transition">Terms</a>
-                    <a href="#contact" class="text-gray-700 hover:text-indigo-600 transition">Contact</a>
-                    <a href="#deletion" class="text-gray-700 hover:text-indigo-600 transition">Data Deletion</a>
-                </div>
-                <div class="md:hidden flex items-center">
-                    <button type="button" id="mobile-menu-button" class="text-gray-500 hover:text-indigo-600">
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white pb-3 px-4 shadow-lg">
-            <div class="flex flex-col space-y-3">
-                <a href="#home" class="text-gray-700 hover:text-indigo-600 transition py-2 border-b border-gray-100">Home</a>
-                <a href="#privacy" class="text-gray-700 hover:text-indigo-600 transition py-2 border-b border-gray-100">Privacy Policy</a>
-                <a href="#terms" class="text-gray-700 hover:text-indigo-600 transition py-2 border-b border-gray-100">Terms</a>
-                <a href="#contact" class="text-gray-700 hover:text-indigo-600 transition py-2 border-b border-gray-100">Contact</a>
-                <a href="#deletion" class="text-gray-700 hover:text-indigo-600 transition py-2">Data Deletion</a>
-            </div>
-        </div>
-    </nav>
+<body>
+  <h2>Ask the Assistant</h2>
+  <div id="chat"></div>
+  <input type="text" id="userInput" placeholder="Type your question..." />
+  <button onclick="handleSend()">Send</button>
 
-    <!-- Hero Section -->
-    <section id="home" class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div class="text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                MyInstagramApp <span class="text-indigo-600">Insights Tool</span>
-            </h1>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-12">
-                MyInstagramApp is a tool that connects your Instagram Business account to our platform to access insights and media using the Instagram Graph API.
-            </p>
-            <div class="flex flex-col md:flex-row justify-center gap-4">
-                <a href="#contact" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-lg font-medium shadow-md transition duration-300">
-                    Get Started
-                </a>
-                <a href="#privacy" class="border border-indigo-600 text-indigo-600 hover:bg-indigo-50 px-8 py-4 rounded-lg font-medium transition duration-300">
-                    Learn More
-                </a>
-            </div>
-        </div>
-        
-        <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
-                <div class="text-indigo-600 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                </div>
-                <h3 class="text-xl font-semibold mb-2">Comprehensive Analytics</h3>
-                <p class="text-gray-600">
-                    Get detailed insights about your audience, engagement, and content performance directly from the Instagram Graph API.
-                </p>
-            </div>
-            
-            <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
-                <div class="text-indigo-600 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                </div>
-                <h3 class="text-xl font-semibold mb-2">Secure Connection</h3>
-                <p class="text-gray-600">
-                    Authenticate directly with Instagram. We never store your credentials or personal data on our servers.
-                </p>
-            </div>
-            
-            <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
-                <div class="text-indigo-600 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-                    </svg>
-                </div>
-                <h3 class="text-xl font-semibold mb-2">Media Access</h3>
-                <p class="text-gray-600">
-                    Access and manage your Instagram media posts and stories through our simplified interface.
-                </p>
-            </div>
-        </div>
-    </section>
+  <script>
+    function addMessage(text, sender) {
+      const chat = document.getElementById("chat");
+      const div = document.createElement("div");
+      div.className = "message " + sender;
+      div.innerText = (sender === "user" ? "You: " : "Bot: ") + text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
 
-    <!-- Privacy Policy Section -->
-    <section id="privacy" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-white">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900">Privacy Policy</h2>
-            <div class="w-20 h-1 bg-indigo-600 mx-auto mt-4"></div>
-        </div>
-        
-        <div class="max-w-3xl mx-auto bg-gray-50 rounded-xl p-8 shadow-sm">
-            <h3 class="text-xl font-semibold mb-4 text-indigo-600">Our Commitment to Your Privacy</h3>
-            <p class="text-gray-700 mb-6">
-                We respect your privacy. MyInstagramApp does not store, share, or misuse any personal data. 
-                We only request access to your Instagram Business account via the Instagram Graph API with your consent. 
-                No data is stored on our servers beyond your current session.
-            </p>
-            
-            <h3 class="text-xl font-semibold mb-4 text-indigo-600">Data Collection</h3>
-            <p class="text-gray-700 mb-6">
-                The only data we access is through the Instagram Graph API with your explicit permission. 
-                This may include profile information, media, and insights from your Instagram Business account. 
-                We process this data temporarily to display it to you but do not retain it after your session ends.
-            </p>
-            
-            <h3 class="text-xl font-semibold mb-4 text-indigo-600">Cookies and Tracking</h3>
-            <p class="text-gray-700 mb-6">
-                We use only essential session cookies to maintain your login session. 
-                We do not use tracking cookies or third-party analytics tools that would compromise your privacy.
-            </p>
-            
-            <h3 class="text-xl font-semibold mb-4 text-indigo-600">Contact</h3>
-            <p class="text-gray-700">
-                For data deletion or any privacy-related questions, please contact us at <a href="mailto:support@myinstagramapp.com" class="text-indigo-600 hover:underline">support@myinstagramapp.com</a>.
-            </p>
-            
-            <div class="mt-8 pt-6 border-t border-gray-200 text-sm text-gray-500">
-                Last updated: June 2023
-            </div>
-        </div>
-    </section>
+    function displayBotReply(text) {
+      addMessage(text, "bot");
+    }
 
-    <!-- Terms of Service Section -->
-    <section id="terms" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-gray-50">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900">Terms of Service</h2>
-            <div class="w-20 h-1 bg-indigo-600 mx-auto mt-4"></div>
-        </div>
-        
-        <div class="max-w-3xl mx-auto bg-white rounded-xl p-8 shadow-sm">
-            <h3 class="text-xl font-semibold mb-4 text-indigo-600">Acceptance of Terms</h3>
-            <p class="text-gray-700 mb-6">
-                By using MyInstagramApp, you agree to be bound by these Terms of Service and our Privacy Policy. 
-                If you do not agree with any part of these terms, you may not use our services.
-            </p>
-            
-            <h3 class="text-xl font-semibold mb-4 text-indigo-600">Service Description</h3>
-            <p class="text-gray-700 mb-6">
-                MyInstagramApp provides API-based insights and media access for Instagram Business accounts. 
-                We only offer access to data through the official Instagram Graph API and are not affiliated with Meta Platforms, Inc.
-            </p>
-            
-            <h3 class="text-xl font-semibold mb-4 text-indigo-600">User Responsibilities</h3>
-            <ul class="list-disc pl-5 mb-6 space-y-2 text-gray-700">
-                <li>You must own or have proper authorization to manage the Instagram Business account you connect.</li>
-                <li>You agree not to misuse the services or attempt to access data you're not authorized to view.</li>
-                <li>You will not use our services to violate Instagram's Terms of Service or any applicable laws.</li>
-            </ul>
-            
-            <h3 class="text-xl font-semibold mb-4 text-indigo-600">Limitation of Liability</h3>
-            <p class="text-gray-700">
-                MyInstagramApp is provided "as is" without warranties of any kind. We are not responsible for any interruptions in service, 
-                data accuracy, or actions taken by Instagram/Meta that may affect functionality. Your use of the Instagram Graph API 
-                is subject to Instagram's own terms and conditions.
-            </p>
-            
-            <div class="mt-8 pt-6 border-t border-gray-200 text-sm text-gray-500">
-                Last updated: June 2023
-            </div>
-        </div>
-    </section>
+    function handleSend() {
+      const input = document.getElementById("userInput");
+      const message = input.value;
+      if (!message) return;
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-white">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900">Contact Us</h2>
-            <div class="w-20 h-1 bg-indigo-600 mx-auto mt-4"></div>
-            <p class="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
-                Have questions or need support? Reach out to our team and we'll get back to you as soon as possible.
-            </p>
-        </div>
-        
-        <div class="max-w-3xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div>
-                    <div class="mb-8">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-4">General Inquiries</h3>
-                        <p class="text-gray-600">
-                            For general questions about MyInstagramApp or its features, you can email us at:
-                        </p>
-                        <a href="mailto:support@myinstagramapp.com" class="text-indigo-600 hover:underline font-medium block mt-2">support@myinstagramapp.com</a>
-                    </div>
-                    
-                    <div class="mb-8">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Technical Support</h3>
-                        <p class="text-gray-600">
-                            Need help with the Instagram Graph API connection or troubleshooting?
-                        </p>
-                        <a href="mailto:tech@myinstagramapp.com" class="text-indigo-600 hover:underline font-medium block mt-2">tech@myinstagramapp.com</a>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Privacy Questions</h3>
-                        <p class="text-gray-600">
-                            For any questions regarding data privacy, please see our Privacy Policy or contact:
-                        </p>
-                        <a href="mailto:privacy@myinstagramapp.com" class="text-indigo-600 hover:underline font-medium block mt-2">privacy@myinstagramapp.com</a>
-                    </div>
-                </div>
-                
-                <div class="bg-gray-50 p-8 rounded-lg shadow-sm">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-6">Send us a message</h3>
-                    <form id="contact-form">
-                        <div class="mb-4">
-                            <label for="name" class="block text-gray-700 mb-2">Your Name</label>
-                            <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent">
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="email" class="block text-gray-700 mb-2">Email Address</label>
-                            <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent">
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="subject" class="block text-gray-700 mb-2">Subject</label>
-                            <select id="subject" name="subject" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent">
-                                <option value="general">General Inquiry</option>
-                                <option value="support">Technical Support</option>
-                                <option value="privacy">Privacy Concern</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <label for="message" class="block text-gray-700 mb-2">Message</label>
-                            <textarea id="message" name="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent"></textarea>
-                        </div>
-                        
-                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition duration-300 shadow-md">
-                            Send Message
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+      addMessage(message, "user");
+      input.value = "";
+      sendMessageToN8N(message);
+    }
 
-    <!-- Data Deletion Section -->
-    <section id="deletion" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-gray-50">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900">Data Deletion Instructions</h2>
-            <div class="w-20 h-1 bg-indigo-600 mx-auto mt-4"></div>
-        </div>
-        
-        <div class="max-w-3xl mx-auto bg-white rounded-xl p-8 shadow-sm">
-            <div class="mb-8">
-                <h3 class="text-xl font-semibold mb-4 text-indigo-600">Requesting Data Deletion</h3>
-                <p class="text-gray-700 mb-6">
-                    While MyInstagramApp doesn't permanently store your Instagram data, we understand you may want to ensure all temporary data 
-                    is removed from our systems. Follow these simple steps:
-                </p>
-                
-                <div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 mb-6">
-                    <p class="text-indigo-800">
-                        Email <strong>support@myinstagramapp.com</strong> with the subject line "Data Deletion Request" and include your Instagram Business account username.
-                    </p>
-                </div>
-                
-                <p class="text-gray-700">
-                    We will process your request within 24 hours and confirm when all temporary session data associated with your account has been removed.
-                </p>
-            </div>
-            
-            <div class="mb-8">
-                <h3 class="text-xl font-semibold mb-4 text-indigo-600">What We Delete</h3>
-                <ul class="list-disc pl-5 space-y-2 text-gray-700">
-                    <li>Any cached Instagram data from your recent session</li>
-                    <li>Your authentication token with the Instagram Graph API</li>
-                    <li>Platform activity logs associated with your account</li>
-                </ul>
-            </div>
-            
-            <div>
-                <h3 class="text-xl font-semibold mb-4 text-indigo-600">Important Note</h3>
-                <p class="text-gray-700">
-                    Deleting data from MyInstagramApp does not affect your Instagram account or any data stored by Instagram/Meta. 
-                    You may need to separately revoke access through your Instagram account settings if you wish to fully disconnect.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div class="md:col-span-2">
-                    <h3 class="text-xl font-bold mb-4">MyInstagramApp</h3>
-                    <p class="text-gray-400 mb-4">
-                        A simple tool to access your Instagram Business insights through the official Instagram Graph API.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"></path>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-                
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#home" class="hover:text-indigo-400 transition">Home</a></li>
-                        <li><a href="#privacy" class="hover:text-indigo-400 transition">Privacy Policy</a></li>
-                        <li><a href="#terms" class="hover:text-indigo-400 transition">Terms of Service</a></li>
-                        <li><a href="#contact" class="hover:text-indigo-400 transition">Contact</a></li>
-                        <li><a href="#deletion" class="hover:text-indigo-400 transition">Data Deletion</a></li>
-                        function sendMessageToN8N(userMessage) {
-  fetch("https://your-n8n-domain/webhook/chatbot-message", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: "John", // Get from Shopify or user input
-      email: "john@example.com",
-      message: userMessage
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    displayBotReply(data.reply); // e.g., update the chat window
-  });
-}
-
+    function sendMessageToN8N(userMessage) {
+      fetch("https://your-n8n-domain/webhook/chatbot-message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: "John", // Later you can replace this with dynamic name
+          email: "john@example.com",
+          message: userMessage
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        displayBotReply(data.reply); // Show reply from N8N
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        displayBotReply("Sorry, something went wrong.");
+      });
+    }
+  </script>
 </body>
 </html>
