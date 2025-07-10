@@ -154,7 +154,7 @@ function sendMessageToN8N(userMessage) {
   const name = customerInfo?.name || "Anonymous";
   const email = customerInfo?.email || "unknown@example.com";
 
-  fetch("https://hivematic.app.n8n.cloud/webhook/66dcc32f-bd72-4183-b6ea-903bd0f590ca", {
+  fetch("https://hivematic.app.n8n.cloud/webhook-test/66dcc32f-bd72-4183-b6ea-903bd0f590ca", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
