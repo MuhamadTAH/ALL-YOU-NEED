@@ -150,41 +150,42 @@
             sendMessageToN8N(message);
         }
 
-  // 1. Receive and store customer data
-  let customerInfo = null;
-  window.addEventListener("message", (event) => {
+function sendMessageToN8N(userMessage) {
+  const name = customerInfo?.name || "Anonymous";
+  const email = customerInfo?.email || "unknown@example.com";
+
+  fetch("https://hivematic.app.n8n.cloud/webhook/66dcc32f-bd72-4183-b6ea-903bd0f590ca", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name,
+      email,
+      message: userMessage
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    displayBotReply(data.reply || "Thanks for your message.");
+  })
+  .catch(err => {
+    console.error("Error:", err);
+    displayBotReply("Sorry, something went wrong.");
+  });
+}
+
+<script>
+let customerInfo = null;
+
+window.addEventListener("message", (event) => {
+  // Only allow messages from your own Shopify store
+  if (event.origin.includes("your-shopify-store.myshopify.com")) {
     if (event.data?.type === "shopify_customer") {
       customerInfo = event.data.payload;
-      console.log("✅ Received customer:", customerInfo);
+      console.log("✅ Customer info received:", customerInfo);
     }
-  });
-
-  // ... your existing sendMessageToN8N() ...
-  function sendMessageToN8N(userMessage) {
-    const name  = customerInfo?.name  || "Anonymous";
-    const email = customerInfo?.email || "unknown@example.com";
-
-    fetch("https://hivematic.app.n8n.cloud/webhook/66dcc32f-bd72-4183-b6ea-903bd0f590ca", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, message: userMessage })
-    })
-    .then(async res => {
-      if (!res.ok) throw new Error("Bad response");
-      const data = await res.json();
-      if (!data.reply) throw new Error("Missing reply");
-      displayBotReply(data.reply);
-    })
-    .catch(err => {
-      console.error("Error:", err);
-      displayBotReply("Sorry, something went wrong.");
-    })
-    .finally(() => {
-      const btn = document.getElementById("sendButton");
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i><span>Send</span>';
-    });
   }
+});
+</script>
 
 
 
