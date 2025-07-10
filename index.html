@@ -350,5 +350,21 @@
                         <li><a href="#terms" class="hover:text-indigo-400 transition">Terms of Service</a></li>
                         <li><a href="#contact" class="hover:text-indigo-400 transition">Contact</a></li>
                         <li><a href="#deletion" class="hover:text-indigo-400 transition">Data Deletion</a></li>
+                        function sendMessageToN8N(userMessage) {
+  fetch("https://your-n8n-domain/webhook/chatbot-message", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: "John", // Get from Shopify or user input
+      email: "john@example.com",
+      message: userMessage
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    displayBotReply(data.reply); // e.g., update the chat window
+  });
+}
+
 </body>
 </html>
