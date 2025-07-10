@@ -74,6 +74,45 @@
         addMessage("Oops—something went wrong.");
       });
     }
+    // Load name/email if already stored
+let customerInfo = {
+  name: localStorage.getItem("chat_name") || null,
+  email: localStorage.getItem("chat_email") || null,
+};
+
+// Step tracking
+let stage = 0;
+if (customerInfo.name && customerInfo.email) {
+  stage = 2;
+  addMessage(`Welcome back, ${customerInfo.name}! How can I help you today?`);
+} else {
+  addMessage("Hi! What's your name?");
+}
+
+// When user provides name/email, save to localStorage
+function handleSend() {
+  const input = document.getElementById("userInput");
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  addMessage(msg, "user");
+  input.value = "";
+
+  if (stage === 0) {
+    customerInfo.name = msg;
+    localStorage.setItem("chat_name", msg);
+    stage = 1;
+    addMessage(`Nice to meet you, ${customerInfo.name}! What's your email?`);
+  } else if (stage === 1) {
+    customerInfo.email = msg;
+    localStorage.setItem("chat_email", msg);
+    stage = 2;
+    addMessage("Thanks! How can I help you today?");
+  } else {
+    sendToN8N(msg);
+  }
+}
+
   </script>
 </body>
 </html>
