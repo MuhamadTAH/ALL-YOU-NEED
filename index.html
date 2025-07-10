@@ -188,15 +188,6 @@
 
 
 
-let customerInfo = null;
-
-window.addEventListener("message", (event) => {
-  if (event.data?.type === "shopify_customer") {
-    customerInfo = event.data.payload;
-    console.log("Received customer info from Shopify:", customerInfo);
-  }
-});
-
     </script>
 </body>
 </html>
