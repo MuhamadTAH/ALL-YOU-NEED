@@ -181,6 +181,15 @@
                 sendButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i><span>Send</span>';
             });
         }
+let customerInfo = null;
+
+window.addEventListener("message", (event) => {
+  if (event.data?.type === "shopify_customer") {
+    customerInfo = event.data.payload;
+    console.log("Received customer info from Shopify:", customerInfo);
+  }
+});
+
     </script>
 </body>
 </html>
