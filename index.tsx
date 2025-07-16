@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 
-type Page = 'home' | 'pricing' | 'login' | 'signup' | 'dashboard' | 'privacy' | 'terms';
+type Page = 'home' | 'pricing' | 'login' | 'signup' | 'dashboard' | 'privacy' | 'terms' | 'checkout';
+type Plan = { name: string; price: string; period: string; };
 
 const Header = ({ setPage, isLoggedIn, onLogout }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -71,8 +72,14 @@ const HomePage = ({ setPage }) => (
     </>
 );
 
-const PricingPage = ({ setPage }) => {
+const PricingPage = ({ setPage, onSubscribe }) => {
     const [isYearly, setIsYearly] = useState(false);
+    
+    const plans = {
+        basic: { name: 'Basic', price: isYearly ? '96' : '10', period: isYearly ? 'year' : 'mo' },
+        pro: { name: 'Pro', price: isYearly ? '192' : '20', period: isYearly ? 'year' : 'mo' },
+        enterprise: { name: 'Enterprise', price: isYearly ? '480' : '50', period: isYearly ? 'year' : 'mo' }
+    };
 
     return (
         <main className="container">
@@ -88,36 +95,36 @@ const PricingPage = ({ setPage }) => {
             <div className="pricing-grid">
                 <div className="pricing-card">
                     <h3>Basic</h3>
-                    <p className="price">${isYearly ? '96' : '10'}<span className="period">/{isYearly ? 'year' : 'mo'}</span></p>
+                    <p className="price">${plans.basic.price}<span className="period">/{plans.basic.period}</span></p>
                     <ul className="features">
                         <li>Access to standard content</li>
                         <li>Watch on one device</li>
                         <li>Email support</li>
                     </ul>
-                    <button className="subscribe-button" onClick={() => setPage('signup')}>Subscribe</button>
+                    <button className="subscribe-button" onClick={() => onSubscribe(plans.basic)}>Subscribe</button>
                 </div>
                 <div className="pricing-card popular">
                     <div className="popular-badge">Most Popular</div>
                     <h3>Pro</h3>
-                    <p className="price">${isYearly ? '192' : '20'}<span className="period">/{isYearly ? 'year' : 'mo'}</span></p>
+                    <p className="price">${plans.pro.price}<span className="period">/{plans.pro.period}</span></p>
                     <ul className="features">
                         <li>Access to all content</li>
                         <li>Watch on two devices</li>
                         <li>Priority email support</li>
                         <li>Offline access</li>
                     </ul>
-                    <button className="subscribe-button" onClick={() => setPage('signup')}>Subscribe</button>
+                    <button className="subscribe-button" onClick={() => onSubscribe(plans.pro)}>Subscribe</button>
                 </div>
                 <div className="pricing-card">
                     <h3>Enterprise</h3>
-                    <p className="price">${isYearly ? '480' : '50'}<span className="period">/{isYearly ? 'year' : 'mo'}</span></p>
+                    <p className="price">${plans.enterprise.price}<span className="period">/{plans.enterprise.period}</span></p>
                     <ul className="features">
                         <li>Access for your whole team</li>
                         <li>Watch on unlimited devices</li>
                         <li>24/7 dedicated support</li>
                         <li>Custom integrations</li>
                     </ul>
-                    <button className="subscribe-button" onClick={() => setPage('signup')}>Subscribe</button>
+                    <button className="subscribe-button" onClick={() => onSubscribe(plans.enterprise)}>Subscribe</button>
                 </div>
             </div>
         </main>
@@ -163,6 +170,65 @@ const AuthForm = ({ isLogin, setPage, onAuth }) => {
         </main>
     );
 };
+
+const CheckoutPage = ({ plan, onConfirmPayment }: { plan: Plan; onConfirmPayment: () => void; }) => {
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        // In a real app, you'd process payment here.
+        // For this demo, we'll just confirm and log in.
+        onConfirmPayment();
+    };
+
+    return (
+        <main className="container">
+            <h1 className="page-title">Checkout</h1>
+            <div className="checkout-layout">
+                <div className="checkout-form-container">
+                    <h3>Payment Details</h3>
+                    <p>Complete your purchase by providing your payment details.</p>
+                    <form className="payment-form" onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="cardholder-name">Cardholder Name</label>
+                            <input type="text" id="cardholder-name" required placeholder="John Smith" />
+                        </div>
+                         <div className="form-group">
+                            <label htmlFor="card-number">Card Number</label>
+                            <input type="text" id="card-number" required placeholder="1234 5678 9101 1121" pattern="\d{4} \d{4} \d{4} \d{4}" title="Card number should be 16 digits."/>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="expiry-date">Expiry Date</label>
+                                <input type="text" id="expiry-date" required placeholder="MM / YY" />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="cvc">CVC</label>
+                                <input type="text" id="cvc" required placeholder="123" />
+                            </div>
+                        </div>
+                         <button type="submit" className="auth-button" style={{marginTop: '1rem'}}>
+                            Confirm Payment
+                        </button>
+                    </form>
+                </div>
+                <aside className="order-summary">
+                    <h3>Order Summary</h3>
+                    <div className="order-item">
+                        <span>{plan.name} Plan</span>
+                        <span>${plan.price}/{plan.period}</span>
+                    </div>
+                    <div className="order-total">
+                        <strong>Total</strong>
+                        <strong>${plan.price}</strong>
+                    </div>
+                     <div className="secure-info">
+                        <p>✓ Secure payment with SSL Encryption</p>
+                    </div>
+                </aside>
+            </div>
+        </main>
+    );
+};
+
 
 const DashboardPage = () => (
     <main>
@@ -250,6 +316,7 @@ const Footer = ({ setPage }) => (
 const App = () => {
     const [page, setPage] = useState<Page>('home');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
     const handleLogin = () => {
         setIsLoggedIn(true);
@@ -260,17 +327,27 @@ const App = () => {
         setIsLoggedIn(false);
         setPage('home');
     };
+    
+    const handleSubscribe = (plan: Plan) => {
+        setSelectedPlan(plan);
+        setPage('checkout');
+    };
+
 
     const renderPage = () => {
         switch (page) {
             case 'home':
                 return <HomePage setPage={setPage} />;
             case 'pricing':
-                return <PricingPage setPage={setPage} />;
+                return <PricingPage setPage={setPage} onSubscribe={handleSubscribe} />;
             case 'login':
                 return <AuthForm isLogin={true} setPage={setPage} onAuth={handleLogin} />;
             case 'signup':
                 return <AuthForm isLogin={false} setPage={setPage} onAuth={handleLogin} />;
+            case 'checkout':
+                return selectedPlan ? 
+                    <CheckoutPage plan={selectedPlan} onConfirmPayment={handleLogin} /> : 
+                    <PricingPage setPage={setPage} onSubscribe={handleSubscribe} />;
             case 'dashboard':
                 return isLoggedIn ? <DashboardPage /> : <AuthForm isLogin={true} setPage={setPage} onAuth={handleLogin} />;
             case 'privacy':
