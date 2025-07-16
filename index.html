@@ -1,124 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AI Assistant</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style> /* your existing styles */ </style>
-</head>
-<body class="bg-gray-50 flex flex-col min-h-screen">
-  <div id="chat" class="flex-grow p-6 overflow-y-auto"></div>
-  <div class="p-4 bg-white border-t flex">
-    <input id="userInput" class="flex-grow px-4 py-2 border rounded" placeholder="Type your message..." />
-    <button id="sendBtn" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Send</button>
-  </div>
-
-  <script>
-    let stage = 0;               // 0 = ask name, 1 = ask email, 2 = normal chat
-    let collected = { name: null, email: null };
-
-    function addMessage(text, sender="bot") {
-      const div = document.createElement("div");
-      div.className = `message ${sender}`;
-      div.innerHTML = `<strong>${sender==="user"?"You":"Bot"}:</strong> ${text}`;
-      document.getElementById("chat").appendChild(div);
-      window.scrollTo(0, document.body.scrollHeight);
-    }
-
-    // initialization
-    addMessage("Hello! I'm your AI assistant. What's your name?");
-
-    document.getElementById("sendBtn").onclick = handleSend;
-    document.getElementById("userInput").addEventListener("keypress", e => {
-      if (e.key==="Enter") handleSend();
-    });
-
-    function handleSend() {
-      const input = document.getElementById("userInput");
-      const msg = input.value.trim();
-      if (!msg) return;
-      addMessage(msg, "user");
-      input.value = "";
-      
-      if (stage === 0) {
-        collected.name = msg;
-        stage = 1;
-        addMessage(`Nice to meet you, ${collected.name}! And your email?`);
-      }
-      else if (stage === 1) {
-        collected.email = msg;
-        stage = 2;
-        addMessage("Thanks! How can I help you today?");
-      }
-      else {
-        // normal chat: send to N8N
-        sendToN8N(msg);
-      }
-    }
-
-    function sendToN8N(userMessage) {
-      fetch("https://hivematic.app.n8n.cloud/webhook/66dcc32f-bd72-4183-b6ea-903bd0f590ca", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: collected.name,
-          email: collected.email,
-          message: userMessage
-        })
-      })
-      .then(res => res.json())
-      .then(data => addMessage(data.reply || "Sorry, no reply."))
-      .catch(err => {
-        console.error(err);
-        addMessage("Oops—something went wrong.");
-      });
-    }
-    // Load name/email if already stored
-let customerInfo = {
-  name: localStorage.getItem("chat_name") || null,
-  email: localStorage.getItem("chat_email") || null,
-};
-
-// Step tracking
-let stage = 0;
-if (customerInfo.name && customerInfo.email) {
-  stage = 2;
-  addMessage(`Welcome back, ${customerInfo.name}! How can I help you today?`);
-} else {
-  addMessage("Hi! What's your name?");
-}
-
-// When user provides name/email, save to localStorage
-function handleSend() {
-  const input = document.getElementById("userInput");
-  const msg = input.value.trim();
-  if (!msg) return;
-
-  addMessage(msg, "user");
-  input.value = "";
-
-  if (stage === 0) {
-    customerInfo.name = msg;
-    localStorage.setItem("chat_name", msg);
-    stage = 1;
-    addMessage(`Nice to meet you, ${customerInfo.name}! What's your email?`);
-  } else if (stage === 1) {
-    customerInfo.email = msg;
-    localStorage.setItem("chat_email", msg);
-    stage = 2;
-    addMessage("Thanks! How can I help you today?");
-  } else {
-    sendToN8N(msg);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SubScribe - Your Digital Subscription Service</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css" />
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/"
   }
 }
-    let uid = localStorage.getItem("chat_uid");
-if (!uid) {
-  uid = crypto.randomUUID();
-  localStorage.setItem("chat_uid", uid);
-}
-
-
-  </script>
-</body>
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="index.tsx"></script>
+  </body>
 </html>
