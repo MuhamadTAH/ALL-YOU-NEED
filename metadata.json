@@ -1,0 +1,5 @@
+
+{
+  "name": "AI Greeting Card Generator",
+  "description": "A simple and elegant web application that uses the Gemini API to generate personalized, creative greetings. Enter a name and receive a unique welcome message."
+}
